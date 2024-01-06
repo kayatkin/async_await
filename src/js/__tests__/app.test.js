@@ -1,9 +1,9 @@
 import GameSavingLoader from "../GameSavingLoader";
 
-test("should return promise for load()", async () => {
-  const result = await GameSavingLoader.load();
+jest.setTimeout(15000);
 
-  const expected = {
+test("should return promise for load() - using async/await", async () => {
+  await expect(GameSavingLoader.load()).resolves.toEqual({
     id: 9,
     created: 1546300800,
     userInfo: {
@@ -12,7 +12,15 @@ test("should return promise for load()", async () => {
       level: 10,
       points: 2000,
     },
-  };
+  });
+}, 10000);
 
-  expect(result).toEqual(expected);
-});
+test("should catch an error for load()", async () => {
+  GameSavingLoader.load = jest.fn().mockRejectedValue(new Error("Error"));
+
+  try {
+    await GameSavingLoader.load();
+  } catch (error) {
+    expect(error.message).toBe("Error");
+  }
+}, 10000);

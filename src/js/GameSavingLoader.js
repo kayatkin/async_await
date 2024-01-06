@@ -11,11 +11,17 @@ const gameSavingStructure = {
     points: "<number>", // user points
   },
 };
+
 console.log(gameSavingStructure);
+
 export default class GameSavingLoader {
-  static load() {
-    return read()
-      .then((resolve) => json(resolve))
-      .then((response) => JSON.parse(response));
+  static async load() {
+    try {
+      const resolve = await read();
+      const response = await json(resolve);
+      return JSON.parse(response);
+    } catch (error) {
+      throw new Error(error);
+    }
   }
 }
